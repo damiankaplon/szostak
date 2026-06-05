@@ -1,0 +1,28 @@
+---
+// Kolumna danych kontaktowych na stronie /kontakt (telefon, e-mail, biuro, social).
+import SocialLinks from "../ui/SocialLinks.astro";
+import { contact } from "../../data/site";
+---
+
+<div class="reveal">
+  <span class="eyebrow">Dane kontaktowe</span>
+  <div style="margin-top:26px;">
+    <div class="cinfo__item">
+      <div class="cinfo__k">Telefon</div>
+      <a class="cinfo__v" href={`tel:${contact.phones[0].replace(/\s+/g, "")}`}>{contact.phones[0]}</a>
+      <a class="cinfo__v" href={`tel:${contact.phones[1].replace(/\s+/g, "")}`} style="font-size:20px;">{contact.phones[1]}</a>
+    </div>
+    <div class="cinfo__item">
+      <div class="cinfo__k">E-mail</div>
+      <a class="cinfo__v" href={`mailto:${contact.email}`}>{contact.email}</a>
+    </div>
+    <div class="cinfo__item">
+      <div class="cinfo__k">Biuro</div>
+      <span class="cinfo__v" style="display:block;">{contact.city}</span>
+    </div>
+    <div class="cinfo__item">
+      <div class="cinfo__k">Social</div>
+      <SocialLinks variant="light" style="margin-top:12px;" />
+    </div>
+  </div>
+</div>

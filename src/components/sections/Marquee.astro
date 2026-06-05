@@ -1,0 +1,18 @@
+---
+// Statyczny pasek z zakresem projektowanych obiektów (pod hero).
+const items = [
+  "Domy jednorodzinne",
+  "Budynki usługowe",
+  "Obiekty publiczne",
+  "Hale i przemysł",
+  "Inwestycje deweloperskie",
+  "Turystyka i rekreacja",
+  "Przebudowy i modernizacje",
+];
+---
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    {items.map((item) => <span class="marquee__item">{item}</span>)}
+  </div>
+</div>

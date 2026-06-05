@@ -1,0 +1,47 @@
+---
+// Stopka witryny — wspólna dla wszystkich stron.
+import Logo from "../ui/Logo.astro";
+import SocialLinks from "../ui/SocialLinks.astro";
+import { navLinks, footerServices, contact } from "../../data/site";
+---
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__big">Wymarzona przestrzeń<br />zaczyna się od <span class="accent">projektu.</span></div>
+
+    <div class="foot__top">
+      <div>
+        <Logo as="span" class="" style="color:#fff" />
+        <p class="muted" style="margin-top:22px; color:rgba(255,255,255,.55); max-width:34ch;">
+          Biuro projektowe · architekt Jarosław Szostak. Projektujemy i realizujemy w całej Polsce, z bazą w Koszalinie.
+        </p>
+      </div>
+
+      <div>
+        <h4>Nawigacja</h4>
+        <ul>
+          {navLinks.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        </ul>
+      </div>
+
+      <div>
+        <h4>Co projektujemy</h4>
+        <ul>
+          {footerServices.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        </ul>
+      </div>
+
+      <div class="foot__contact">
+        <h4>Kontakt</h4>
+        {contact.phones.map((p) => <a href={`tel:${p.replace(/\s+/g, "")}`}>{p}</a>)}
+        <a href={`mailto:${contact.email}`} style="color:var(--accent)">{contact.email}</a>
+        <SocialLinks variant="dark" style="margin-top:18px;" />
+      </div>
+    </div>
+
+    <div class="foot__bottom">
+      <span>© 2026 Szostak Projekt — wszelkie prawa zastrzeżone.</span>
+      <span>Koszalin, Polska · biuro projektowe</span>
+    </div>
+  </div>
+</footer>

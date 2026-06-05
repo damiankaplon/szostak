@@ -1,0 +1,41 @@
+---
+// Przyklejony pasek nawigacji. Startuje w wariancie "hero" (jasny tekst na
+// ciemnym nagłówku), a po przewinięciu zmienia się w półprzezroczysty pasek.
+// Logika przełączania klas żyje w dołączonym skrypcie (wyspa zachowania).
+import Logo from "../ui/Logo.astro";
+import { navLinks } from "../../data/site";
+---
+
+<header class="nav nav--hero">
+  <Logo />
+
+  <nav class="nav__links" aria-label="Główna">
+    {navLinks.map((l) => <a href={l.href}>{l.label}</a>)}
+  </nav>
+
+  <div class="nav__right">
+    <button class="iconbtn burger" data-mopen aria-label="Otwórz menu">
+      <svg width="20" height="14" viewBox="0 0 20 14" fill="none">
+        <path d="M0 1h20M0 7h20M0 13h20" stroke="currentColor" stroke-width="1.8" />
+      </svg>
+    </button>
+  </div>
+</header>
+
+<script>
+  // Stan paska zależny od pozycji scrolla: przezroczysty na nagłówku,
+  // "solid" po zejściu poniżej hero/phead.
+  const nav = document.querySelector(".nav");
+  const darkHead = document.querySelector(".hero, .phead");
+
+  function onScroll() {
+    if (!nav) return;
+    const past = window.scrollY > 40;
+    nav.classList.toggle("nav--solid", past);
+    const headBottom = darkHead ? (darkHead as HTMLElement).offsetHeight - 70 : 0;
+    nav.classList.toggle("nav--hero", window.scrollY < headBottom && !past);
+  }
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+</script>

@@ -1,0 +1,29 @@
+---
+// Sekcja "Proces" — pięć etapów współpracy na ciemnym tle (dane z process.ts).
+import { processSteps } from "../../data/process";
+---
+
+<section class="section section--ink" id="proces">
+  <div class="wrap">
+    <div class="proc__head">
+      <span class="eyebrow reveal">Współpraca</span>
+      <h2 class="h2 reveal" data-d="1" style="margin-top:18px; color:#fff;">Jasny proces<br />w pięciu etapach</h2>
+      <p class="lead reveal" data-d="2" style="margin-top:22px;">
+        Od pierwszej rozmowy po nadzór nad budową — wiesz dokładnie, co dzieje się na każdym kroku.
+      </p>
+    </div>
+
+    <div class="proc reveal" data-d="1">
+      {
+        processSteps.map((step, i) => (
+          <div class="step">
+            <div class="step__n">{String(i + 1).padStart(2, "0")}</div>
+            <div class="step__t">{step.title}</div>
+            <div class="step__d">{step.text}</div>
+            <div class="step__tag">{step.tag}</div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

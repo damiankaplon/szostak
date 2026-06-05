@@ -1,0 +1,26 @@
+---
+// Sekcja "Dlaczego my" — siatka sześciu kart atutów (dane z features.ts).
+import FeatureCard from "./FeatureCard.astro";
+import { features } from "../../data/features";
+---
+
+<section class="section section--paper2">
+  <div class="wrap">
+    <div
+      class="proc__head"
+      style="margin-bottom:48px; max-width:none; display:flex; justify-content:space-between; align-items:flex-end; gap:30px; flex-wrap:wrap;"
+    >
+      <div>
+        <span class="eyebrow reveal">Dlaczego my</span>
+        <h2 class="h2 reveal" data-d="1" style="margin-top:18px;">Powody, dla których<br />warto nam zaufać</h2>
+      </div>
+      <p class="lead reveal" data-d="2" style="max-width:38ch;">
+        Sześć rzeczy, które robimy inaczej — i które inwestorzy doceniają najbardziej.
+      </p>
+    </div>
+
+    <div class="cards reveal" data-d="1">
+      {features.map((feature, i) => <FeatureCard feature={feature} index={i} />)}
+    </div>
+  </div>
+</section>

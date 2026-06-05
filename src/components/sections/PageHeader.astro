@@ -1,0 +1,26 @@
+---
+// Ciemny nagłówek podstrony (phead) z okruszkami i tytułem.
+// Tytuł renderowany przez <slot>, by umożliwić akcentowanie fragmentu
+// (np. <span class="accent">…</span>) i łamanie wiersza.
+//
+// Props:
+//   crumb — etykieta bieżącej strony w okruszkach.
+//   lead  — akapit wprowadzający pod tytułem.
+interface Props {
+  crumb: string;
+  lead: string;
+}
+
+const { crumb, lead } = Astro.props;
+---
+
+<section class="phead">
+  <div class="phead__grid"></div>
+  <div class="wrap phead__inner">
+    <div class="crumbs">
+      <a href="/">Start</a><span class="sep">/</span><span>{crumb}</span>
+    </div>
+    <h1><slot /></h1>
+    <p class="phead__lead">{lead}</p>
+  </div>
+</section>

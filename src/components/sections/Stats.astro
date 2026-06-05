@@ -1,0 +1,53 @@
+---
+// Pasek statystyk z animowanym odliczaniem liczb (wyspa zachowania).
+// `value` to liczba docelowa, `unit` to dopisek (+ / %).
+const stats = [
+  { value: 12, unit: "+", label: "lat doświadczenia w projektowaniu i realizacji" },
+  { value: 180, unit: "+", label: "zrealizowanych projektów w całej Polsce" },
+  { value: 100, unit: "%", label: "obsługi formalności — od koncepcji po pozwolenie" },
+];
+---
+
+<div class="stats reveal" data-d="1">
+  {
+    stats.map((s) => (
+      <div class="stat">
+        <div class="stat__num">
+          <span data-count={s.value}>0</span>
+          <span class="u">{s.unit}</span>
+        </div>
+        <div class="stat__label">{s.label}</div>
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  // Liczniki ożywają, gdy wejdą w viewport (każdy odpala się raz).
+  const counted = new WeakSet<Element>();
+  const countIO = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting || counted.has(e.target)) return;
+        counted.add(e.target);
+        const el = e.target as HTMLElement;
+        const raw = el.dataset.count ?? "0";
+        const target = parseFloat(raw);
+        const dec = (raw.split(".")[1] || "").length;
+        const dur = 1400;
+        const t0 = performance.now();
+        function tick(now: number) {
+          const p = Math.min(1, (now - t0) / dur);
+          const eased = 1 - Math.pow(1 - p, 3);
+          const val = (target * eased).toFixed(dec);
+          el.textContent = dec ? val : Math.round(Number(val)).toString();
+          if (p < 1) requestAnimationFrame(tick);
+          else el.textContent = raw;
+        }
+        requestAnimationFrame(tick);
+      });
+    },
+    { threshold: 0.6 },
+  );
+  document.querySelectorAll("[data-count]").forEach((el) => countIO.observe(el));
+</script>

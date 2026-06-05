@@ -1,0 +1,35 @@
+---
+// Sekcja "O nas" — deklaracja biura + opis, zakończona paskiem statystyk.
+import Stats from "./Stats.astro";
+---
+
+<section class="section" id="o-nas">
+  <div class="wrap">
+    <div class="about__grid">
+      <div>
+        <span class="eyebrow reveal">O biurze</span>
+        <p class="about__statement reveal" data-d="1" style="margin-top:24px;">
+          Łączymy <span class="accent">inżynierską precyzję</span> z nowoczesnym, odważnym spojrzeniem
+          na architekturę i realne potrzeby inwestora.
+        </p>
+      </div>
+      <div class="about__body reveal" data-d="2">
+        <p>
+          SZOSTAK PROJEKT to biuro projektowe z Koszalina, które opracowuje kompleksowe projekty
+          budowlane — od domów jednorodzinnych, przez budynki usługowe i przemysłowe, po obiekty
+          wielorodzinne i publiczne.
+        </p>
+        <p>
+          Każdy projekt traktujemy indywidualnie, szukając najlepszych rozwiązań technicznych,
+          funkcjonalnych i estetycznych. Zaufanie budujemy rzetelnością, terminowością i pełnym
+          zaangażowaniem na każdym etapie inwestycji.
+        </p>
+        <a href="/oferta" class="link-arrow" style="margin-top:8px;">
+          Poznaj naszą ofertę <span class="arr">→</span>
+        </a>
+      </div>
+    </div>
+
+    <Stats />
+  </div>
+</section>

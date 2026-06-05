@@ -1,0 +1,34 @@
+---
+// Grupa pigułek filtrujących kafelki portfolio po kategorii.
+// Skrypt pokazuje/ukrywa karty .proj na podstawie wybranej kategorii —
+// wyspa zachowania współdzielona przez galerię na stronie głównej i /projekty.
+import { projectFilters } from "../../data/projects";
+---
+
+<div class="folio__filters reveal" role="group" aria-label="Filtr kategorii">
+  {
+    projectFilters.map((f, i) => (
+      <button class="chip" data-filter={f.value} aria-pressed={i === 0 ? "true" : "false"}>
+        {f.label}
+      </button>
+    ))
+  }
+</div>
+
+<script>
+  // Filtrowanie kafelków po kliknięciu pigułki kategorii.
+  const chips = document.querySelectorAll<HTMLElement>(".chip");
+  const projects = document.querySelectorAll<HTMLElement>(".proj");
+
+  chips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      chips.forEach((c) => c.setAttribute("aria-pressed", "false"));
+      chip.setAttribute("aria-pressed", "true");
+      const f = chip.dataset.filter;
+      projects.forEach((p) => {
+        const show = f === "all" || p.dataset.cat === f;
+        p.classList.toggle("is-hidden", !show);
+      });
+    });
+  });
+</script>

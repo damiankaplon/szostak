@@ -1,0 +1,24 @@
+---
+// Kafelek pojedynczej realizacji w siatce portfolio.
+// `data-cat` jest odczytywane przez filtr kategorii (ProjectFilters).
+import type { Project } from "../../data/projects";
+import { categoryLabels } from "../../data/projects";
+
+interface Props {
+  project: Project;
+  href?: string;
+}
+
+const { project, href = "/projekty" } = Astro.props;
+---
+
+<a href={href} class:list={["proj", `s-${project.size}`]} data-cat={project.category}>
+  <div class="proj__media">
+    <div class="proj__img" style={`background-image:url('${project.image}')`}></div>
+  </div>
+  <span class="proj__plus">＋</span>
+  <div class="proj__meta">
+    <span class="proj__cat">{categoryLabels[project.category]}</span>
+    <h3>{project.title}</h3>
+  </div>
+</a>

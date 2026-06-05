@@ -1,0 +1,33 @@
+---
+// Przycisk-link w stylu systemu (pigułka). Domyślnie renderuje <a>,
+// bo w projekcie wszystkie przyciski prowadzą do podstron/akcji.
+//
+// Props:
+//   href     — adres docelowy.
+//   variant  — "accent" (niebieski), "ghost" (obrys) lub "dark" (ciemny).
+//   arrow    — czy dokleić strzałkę "→" (domyślnie true).
+//   class    — dodatkowe klasy / nadpisania inline-owe z arkusza.
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"a"> {
+  href: string;
+  variant?: "accent" | "ghost" | "dark";
+  arrow?: boolean;
+  class?: string;
+}
+
+const {
+  href,
+  variant = "accent",
+  arrow = true,
+  class: className = "",
+  ...rest
+} = Astro.props;
+
+const variantClass =
+  variant === "accent" ? "btn--accent" : variant === "ghost" ? "btn--ghost" : "";
+---
+
+<a href={href} class:list={["btn", variantClass, className]} {...rest}>
+  <slot /><Fragment>{arrow && <span class="arr">→</span>}</Fragment>
+</a>

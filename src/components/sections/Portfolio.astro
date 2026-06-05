@@ -1,0 +1,26 @@
+---
+// Sekcja "Wybrane projekty" na stronie głównej: nagłówek + filtry kategorii,
+// siatka wyróżnionych realizacji i odnośnik do pełnego portfolio.
+import ProjectFilters from "../portfolio/ProjectFilters.astro";
+import ProjectGrid from "../portfolio/ProjectGrid.astro";
+import Button from "../ui/Button.astro";
+import { featuredProjects } from "../../data/projects";
+---
+
+<section class="section" id="projekty">
+  <div class="wrap">
+    <div class="folio__head">
+      <div>
+        <span class="eyebrow reveal">Realizacje</span>
+        <h2 class="h2 reveal" data-d="1" style="margin-top:18px;">Wybrane projekty</h2>
+      </div>
+      <ProjectFilters />
+    </div>
+
+    <ProjectGrid projects={featuredProjects} />
+
+    <div style="margin-top:48px; display:flex; justify-content:center;" class="reveal">
+      <Button href="/projekty" variant="ghost">Wszystkie realizacje</Button>
+    </div>
+  </div>
+</section>

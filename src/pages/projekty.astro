@@ -1,0 +1,43 @@
+---
+// Projekty — pełne portfolio z filtrem kategorii i kafelkami realizacji.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeader from "../components/sections/PageHeader.astro";
+import ProjectFilters from "../components/portfolio/ProjectFilters.astro";
+import ProjectGrid from "../components/portfolio/ProjectGrid.astro";
+import Button from "../components/ui/Button.astro";
+import { allProjects } from "../data/projects";
+---
+
+<BaseLayout
+  title="Nasze projekty — Szostak Projekt"
+  description="Realizacje biura Szostak Projekt — budynki mieszkalne, użyteczności publicznej oraz turystyczno-rekreacyjne."
+>
+  <PageHeader crumb="Nasze projekty" lead="Wybór projektów z różnych kategorii — mieszkalnych, publicznych i turystycznych. Każdy zaczynał się od rozmowy i pustej działki.">
+    Realizacje, które<br />mówią <span class="accent">same za siebie</span>.
+  </PageHeader>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="folio__head">
+        <ProjectFilters />
+        <span class="muted reveal" data-d="1" style="font-family:var(--font-display); font-size:14px;">
+          {allProjects.length} projektów
+        </span>
+      </div>
+
+      <ProjectGrid projects={allProjects} />
+    </div>
+  </section>
+
+  <section class="section section--ink">
+    <div class="wrap" style="text-align:center;">
+      <h2 class="h2 reveal" style="color:#fff; max-width:18ch; margin-inline:auto;">
+        Twój projekt może być <span class="accent">następny</span>.
+      </h2>
+      <div class="reveal" data-d="1" style="margin-top:30px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+        <Button href="/kontakt" variant="accent">Darmowa wycena</Button>
+        <Button href="/oferta" variant="ghost" arrow={false}>Zobacz ofertę</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

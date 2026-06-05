@@ -1,0 +1,23 @@
+---
+// Wiersz oferty na stronie /oferta: numer, tytuł z tagami, opis i CTA "Wyceń".
+import type { Offer } from "../../data/offers";
+
+interface Props {
+  offer: Offer;
+  index: number;
+}
+
+const { offer, index } = Astro.props;
+---
+
+<div class="orow reveal">
+  <div class="orow__n">{String(index + 1).padStart(2, "0")}</div>
+  <div>
+    <div class="orow__t">{offer.title}</div>
+    <div class="orow__tags">
+      {offer.tags.map((t) => <span class="tag">{t}</span>)}
+    </div>
+  </div>
+  <div class="orow__d">{offer.text}</div>
+  <a href="/kontakt" class="link-arrow orow__cta">Wyceń <span class="arr">→</span></a>
+</div>

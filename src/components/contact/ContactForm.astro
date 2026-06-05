@@ -1,0 +1,84 @@
+---
+// Formularz zapytania o wycenę. Używany na stronie głównej (sekcja CTA) oraz
+// na /kontakt (z nagłówkiem). Obsługa wysyłki to wyspa zachowania (skrypt).
+//
+// Props:
+//   idPrefix    — prefiks id pól, by uniknąć kolizji przy wielu formularzach.
+//   title       — opcjonalny nagłówek nad formularzem (wariant /kontakt).
+//   class       — dodatkowe klasy kontenera (np. "cform").
+//   submitLabel — etykieta przycisku wysyłki.
+//   rows        — liczba wierszy pola "Opisz projekt".
+import { investmentTypes } from "../../data/site";
+
+interface Props {
+  idPrefix: string;
+  title?: string;
+  class?: string;
+  submitLabel?: string;
+  rows?: number;
+}
+
+const {
+  idPrefix,
+  title,
+  class: className = "",
+  submitLabel = "Wyślij zapytanie o wycenę",
+  rows = 3,
+} = Astro.props;
+---
+
+<form class:list={["cta__form", className]} data-d={title ? "1" : "2"}>
+  {title && <h3>{title}</h3>}
+
+  <div class="field--row">
+    <div class="field">
+      <label for={`${idPrefix}-name`}>Imię i nazwisko</label>
+      <input id={`${idPrefix}-name`} type="text" placeholder="Jan Kowalski" required />
+    </div>
+    <div class="field">
+      <label for={`${idPrefix}-phone`}>Telefon</label>
+      <input id={`${idPrefix}-phone`} type="tel" placeholder="+48 ___ ___ ___" />
+    </div>
+  </div>
+
+  <div class="field">
+    <label for={`${idPrefix}-email`}>E-mail</label>
+    <input id={`${idPrefix}-email`} type="email" placeholder="jan@email.pl" required />
+  </div>
+
+  <div class="field">
+    <label for={`${idPrefix}-type`}>Rodzaj inwestycji</label>
+    <select id={`${idPrefix}-type`}>
+      {investmentTypes.map((t) => <option>{t}</option>)}
+    </select>
+  </div>
+
+  <div class="field">
+    <label for={`${idPrefix}-msg`}>Opisz projekt</label>
+    <textarea id={`${idPrefix}-msg`} rows={rows} placeholder="Kilka słów o działce, metrażu, oczekiwaniach…"></textarea>
+  </div>
+
+  <button type="submit" class="btn btn--accent" style="justify-content:center; margin-top:6px;">
+    {submitLabel} <span class="arr">→</span>
+  </button>
+  <p class="cta__note">Wysyłając formularz akceptujesz kontakt w sprawie wyceny. Nie wysyłamy spamu.</p>
+</form>
+
+<script>
+  // Szkic obsługi wysyłki — potwierdzenie i reset (bez backendu).
+  document.querySelectorAll<HTMLFormElement>(".cta__form").forEach((form) => {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const btn = form.querySelector<HTMLButtonElement>("button[type=submit]");
+      if (!btn) return;
+      const orig = btn.innerHTML;
+      btn.innerHTML = "Dziękujemy — odezwiemy się ✓";
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        btn.disabled = false;
+        form.reset();
+      }, 2600);
+    });
+  });
+</script>

@@ -1,0 +1,24 @@
+---
+// Strona główna — kompozycja sekcji w kolejności z projektu.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/sections/Hero.astro";
+import About from "../components/sections/About.astro";
+import Features from "../components/sections/Features.astro";
+import Portfolio from "../components/sections/Portfolio.astro";
+import Process from "../components/sections/Process.astro";
+import DeveloperBand from "../components/sections/DeveloperBand.astro";
+import ContactSection from "../components/sections/ContactSection.astro";
+---
+
+<BaseLayout
+  title="Szostak Projekt — biuro projektowe, Koszalin"
+  description="Szostak Projekt — biuro projektowe z Koszalina. Kompleksowe projekty domów, obiektów usługowych, publicznych i inwestycji deweloperskich."
+>
+  <Hero />
+  <About />
+  <Features />
+  <Portfolio />
+  <Process />
+  <DeveloperBand />
+  <ContactSection />
+</BaseLayout>

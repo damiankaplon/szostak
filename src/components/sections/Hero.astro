@@ -1,0 +1,110 @@
+---
+// Hero strony głównej z krzyżowo przenikającą się karuzelą zdjęć.
+// Karuzela (auto-przewijanie + kropki) to wyspa zachowania w skrypcie.
+import Button from "../ui/Button.astro";
+
+const slides = ["/img/hero-1.webp", "/img/hero-2.webp", "/img/hero-3.webp"];
+---
+
+<section class="hero">
+  <div class="hero__media hero__carousel" aria-hidden="true">
+    {
+      slides.map((src, i) => (
+        <div
+          class:list={["hero__slide", { "is-active": i === 0 }]}
+          style={`background-image:url('${src}')`}
+        />
+      ))
+    }
+  </div>
+  <div class="hero__grid"></div>
+  <div class="hero__scrim"></div>
+
+  <div class="hero__meta">KOSZALIN · ARCHITEKTURA · OD KONCEPCJI PO REALIZACJĘ</div>
+
+  <div class="hero__dots" role="tablist" aria-label="Wybierz slajd">
+    {
+      slides.map((_, i) => (
+        <button
+          class:list={["hero__dot", { "is-active": i === 0 }]}
+          data-i={i}
+          aria-label={`Slajd ${i + 1}`}
+        />
+      ))
+    }
+  </div>
+
+  <div class="hero__inner wrap">
+    <span class="hero__tag"><span class="dot"></span> Biuro projektowe · Jarosław Szostak</span>
+    <h1>Wymarzona przestrzeń zaczyna się od <span class="accent">projektu.</span></h1>
+    <div class="hero__row">
+      <p class="hero__sub">
+        Kompleksowe projekty domów, obiektów usługowych, publicznych i inwestycji deweloperskich —
+        z inżynierską precyzją i odwagą formy.
+      </p>
+      <div class="hero__cta">
+        <Button href="/kontakt" variant="accent">Darmowa wycena</Button>
+        <Button href="/projekty" variant="ghost" arrow={false}>Zobacz realizacje</Button>
+      </div>
+    </div>
+  </div>
+
+  <div class="scrollcue"><span class="bar"></span> Przewiń</div>
+</section>
+
+<script>
+  // Karuzela hero: krzyżowe przenikanie slajdów co 5,2 s + sterowanie kropkami.
+  // Respektuje prefers-reduced-motion oraz pauzuje przy ukryciu karty.
+  const slides = Array.from(document.querySelectorAll<HTMLElement>(".hero__slide"));
+  const dots = Array.from(document.querySelectorAll<HTMLElement>(".hero__dot"));
+
+  if (slides.length > 1) {
+    let cur = 0;
+    let timer: ReturnType<typeof setInterval>;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function go(n: number) {
+      slides[cur].classList.remove("is-active");
+      dots[cur]?.classList.remove("is-active");
+      cur = (n + slides.length) % slides.length;
+      slides[cur].classList.add("is-active");
+      dots[cur]?.classList.add("is-active");
+    }
+
+    function start() {
+      if (reduce) return;
+      clearInterval(timer);
+      timer = setInterval(() => go(cur + 1), 5200);
+    }
+
+    dots.forEach((d) =>
+      d.addEventListener("click", () => {
+        go(parseInt(d.dataset.i ?? "0", 10));
+        start();
+      }),
+    );
+
+    start();
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) clearInterval(timer);
+      else start();
+    });
+  }
+</script>
+
+<style is:global>
+  /* Wersja mobilna: mniejsze przyciski hero i dodatkowy odstęp od dołu,
+     aby nie nachodziły na wskaźnik „Przewiń". */
+  @media (max-width: 760px) {
+    .hero__inner {
+      padding-bottom: 96px;
+    }
+    .hero__cta {
+      gap: 10px;
+    }
+    .hero__cta .btn {
+      padding: 12px 18px;
+      font-size: 14px;
+    }
+  }
+</style>

@@ -1,0 +1,34 @@
+---
+// Kontakt — nagłówek, dane kontaktowe + formularz wyceny oraz mapka biura.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeader from "../components/sections/PageHeader.astro";
+import ContactInfo from "../components/contact/ContactInfo.astro";
+import ContactForm from "../components/contact/ContactForm.astro";
+import ContactMap from "../components/contact/ContactMap.astro";
+---
+
+<BaseLayout
+  title="Kontakt — Szostak Projekt"
+  description="Skontaktuj się z biurem projektowym Szostak Projekt w Koszalinie. Darmowa wycena projektu."
+>
+  <PageHeader crumb="Kontakt" lead="Wypełnij formularz lub zadzwoń. Odpowiadamy szybko i konkretnie — z darmową, niezobowiązującą wyceną.">
+    Porozmawiajmy<br />o Twojej <span class="accent">inwestycji</span>.
+  </PageHeader>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="contact__grid">
+        <ContactInfo />
+        <ContactForm
+          idPrefix="k"
+          title="Zamów darmową wycenę"
+          class="cform"
+          submitLabel="Wyślij zapytanie"
+          rows={4}
+        />
+      </div>
+
+      <ContactMap />
+    </div>
+  </section>
+</BaseLayout>

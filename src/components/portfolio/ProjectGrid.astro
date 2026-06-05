@@ -1,0 +1,18 @@
+---
+// Siatka kafelków realizacji. Lista projektów przekazywana z zewnątrz,
+// dzięki czemu ta sama siatka obsługuje wyróżnione (strona główna)
+// i pełne portfolio (/projekty).
+import ProjectCard from "./ProjectCard.astro";
+import type { Project } from "../../data/projects";
+
+interface Props {
+  projects: Project[];
+  href?: string;
+}
+
+const { projects, href } = Astro.props;
+---
+
+<div class="folio__grid reveal" data-d="1">
+  {projects.map((project) => <ProjectCard project={project} href={href} />)}
+</div>

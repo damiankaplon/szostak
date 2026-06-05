@@ -1,0 +1,32 @@
+---
+// Akcentowy pas CTA z dwukolumnowym układem (tytuł + treść z przyciskiem).
+// Treść przekazywana przez sloty, by pas dało się użyć w różnych kontekstach.
+//
+// Props:
+//   title    — nagłówek po lewej.
+//   text     — akapit po prawej.
+//   ctaHref  — adres przycisku.
+//   ctaLabel — etykieta przycisku.
+import Button from "../ui/Button.astro";
+
+interface Props {
+  title: string;
+  text: string;
+  ctaHref: string;
+  ctaLabel: string;
+}
+
+const { title, text, ctaHref, ctaLabel } = Astro.props;
+---
+
+<section class="section band">
+  <div class="wrap">
+    <div class="band__grid">
+      <div><h2 class="reveal">{title}</h2></div>
+      <div class="reveal" data-d="1">
+        <p class="band__lead">{text}</p>
+        <Button href={ctaHref} variant="ghost" class="" style="margin-top:26px;">{ctaLabel}</Button>
+      </div>
+    </div>
+  </div>
+</section>

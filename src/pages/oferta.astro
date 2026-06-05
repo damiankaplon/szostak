@@ -1,0 +1,33 @@
+---
+// Oferta — nagłówek podstrony, zakres usług (wiersze) i pas CTA.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeader from "../components/sections/PageHeader.astro";
+import OfferRow from "../components/sections/OfferRow.astro";
+import ContactBand from "../components/sections/ContactBand.astro";
+import { offers } from "../data/offers";
+---
+
+<BaseLayout
+  title="Oferta — Szostak Projekt"
+  description="Oferta biura projektowego Szostak Projekt — projekty domów, obiektów usługowych, publicznych, hal, turystyki oraz inwestycje deweloperskie."
+>
+  <PageHeader crumb="Oferta" lead="Kompleksowa obsługa inwestycji — od pierwszej koncepcji, przez pełną dokumentację i formalności, po nadzór nad realizacją. Wszystko w jednym biurze.">
+    Projektujemy<br />od A do <span class="accent">Z</span>.
+  </PageHeader>
+
+  <section class="section">
+    <div class="wrap">
+      <span class="eyebrow reveal">Zakres usług</span>
+      <div class="offer" style="margin-top:30px;">
+        {offers.map((offer, i) => <OfferRow offer={offer} index={i} />)}
+      </div>
+    </div>
+  </section>
+
+  <ContactBand
+    title="Nie wiesz, od czego zacząć?"
+    text="Opowiedz nam o swoim pomyśle lub działce. Doradzimy najlepszą ścieżkę i przygotujemy darmową, niezobowiązującą wycenę."
+    ctaHref="/kontakt"
+    ctaLabel="Porozmawiajmy"
+  />
+</BaseLayout>

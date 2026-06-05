@@ -1,0 +1,46 @@
+---
+// Lista ikon społecznościowych (Instagram, Facebook, Google).
+// Dane pochodzą z src/data/site.ts. Używana w stopce (ciemne tło) oraz
+// na stronie Kontakt (jasne tło) — wariant steruje kolorystyką obrysu.
+//
+// Props:
+//   variant — "dark" (domyślnie, jasne ikony) lub "light" (na jasnym tle).
+import { socials } from "../../data/site";
+
+interface Props {
+  variant?: "dark" | "light";
+  class?: string;
+  style?: string;
+}
+
+const { variant = "dark", class: className = "", style } = Astro.props;
+const lightStyle =
+  variant === "light" ? "border-color:var(--line-strong); color:var(--ink);" : undefined;
+---
+
+<div class:list={["foot__social", className]} style={style}>
+  {
+    socials.map((s) => (
+      <a href={s.href} aria-label={s.label} target="_blank" rel="noopener" style={lightStyle}>
+        {s.icon === "instagram" && (
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="5" />
+            <circle cx="12" cy="12" r="4" />
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+          </svg>
+        )}
+        {s.icon === "facebook" && (
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M14 9h3V5h-3c-2.2 0-4 1.8-4 4v2H7v4h3v8h4v-8h3l1-4h-4V9c0-.6.4-1 1-1z" />
+          </svg>
+        )}
+        {s.icon === "google" && (
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 21s7-6.3 7-11a7 7 0 10-14 0c0 4.7 7 11 7 11z" />
+            <circle cx="12" cy="10" r="2.5" />
+          </svg>
+        )}
+      </a>
+    ))
+  }
+</div>

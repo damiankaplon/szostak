@@ -1,0 +1,37 @@
+---
+// Sekcja CTA / kontakt na stronie głównej — dane kontaktowe + formularz wyceny.
+import ContactForm from "../contact/ContactForm.astro";
+import { contact } from "../../data/site";
+---
+
+<section class="section section--ink" id="kontakt">
+  <div class="wrap">
+    <div class="cta__grid">
+      <div class="cta">
+        <span class="eyebrow reveal" style="color:rgba(255,255,255,.55)">Zacznijmy</span>
+        <h2 class="reveal" data-d="1" style="margin-top:18px; color:#fff;">Zaprojektuj<br />swój <span class="accent">dom</span>.</h2>
+        <p class="lead reveal" data-d="2" style="margin-top:24px;">
+          Opisz pomysł lub działkę — odezwiemy się z darmową, niezobowiązującą wyceną i propozycją
+          kolejnych kroków.
+        </p>
+        <div class="reveal" data-d="3" style="margin-top:34px; display:flex; flex-direction:column; gap:6px;">
+          <a
+            href={`tel:${contact.phones[0].replace(/\s+/g, "")}`}
+            class="foot__contact"
+            style="font-family:var(--font-display); font-size:clamp(22px,2.4vw,32px); color:#fff;"
+          >
+            {contact.phones[0]}
+          </a>
+          <a
+            href={`mailto:${contact.email}`}
+            style="color:var(--accent); font-family:var(--font-display); font-size:18px;"
+          >
+            {contact.email}
+          </a>
+        </div>
+      </div>
+
+      <ContactForm idPrefix="f" />
+    </div>
+  </div>
+</section>

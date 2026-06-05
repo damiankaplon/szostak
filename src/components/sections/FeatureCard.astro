@@ -1,0 +1,27 @@
+---
+// Pojedyncza karta atutu ("Dlaczego my"). Ikona wybierana po nazwie z danych.
+import type { Feature } from "../../data/features";
+
+interface Props {
+  feature: Feature;
+  index: number;
+}
+
+const { feature, index } = Astro.props;
+const ix = String(index + 1).padStart(2, "0");
+---
+
+<article class="card">
+  <span class="card__ix">{ix}</span>
+  <svg class="card__icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4">
+    {feature.icon === "complex" && <Fragment><rect x="6" y="6" width="36" height="36" rx="3" /><path d="M6 18h36M18 18v24" /></Fragment>}
+    {feature.icon === "speed" && <path d="M26 6L10 28h12l-2 14 18-24H26l2-12z" stroke-linejoin="round" />}
+    {feature.icon === "individual" && <Fragment><path d="M24 28a8 8 0 100-16 8 8 0 000 16z" /><path d="M10 40c1.5-7 6.5-11 14-11s12.5 4 14 11" /></Fragment>}
+    {feature.icon === "modern" && <Fragment><path d="M24 4l18 10v20L24 44 6 34V14L24 4z" stroke-linejoin="round" /><path d="M24 24l18-10M24 24v20M24 24L6 14" /></Fragment>}
+    {feature.icon === "trust" && <Fragment><path d="M6 26l8-8 8 6 14-14" /><path d="M30 10h6v6" stroke-linecap="round" /><path d="M6 38h36" opacity=".5" /></Fragment>}
+    {feature.icon === "open" && <Fragment><circle cx="24" cy="24" r="18" /><path d="M24 14v10l7 4" stroke-linecap="round" /></Fragment>}
+  </svg>
+  <h3>{feature.title}</h3>
+  <p>{feature.text}</p>
+  <span class="card__line"></span>
+</article>
