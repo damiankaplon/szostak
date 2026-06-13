@@ -4,7 +4,10 @@
 import ProjectFilters from "../portfolio/ProjectFilters.astro";
 import ProjectGrid from "../portfolio/ProjectGrid.astro";
 import Button from "../ui/Button.astro";
-import { featuredProjects } from "../../data/projects";
+import { getFeaturedProjects } from "../../lib/strapi";
+
+// Wyróżnione realizacje ze Strapi — dwie pierwsze z każdej kategorii.
+const { projects, filters } = await getFeaturedProjects();
 ---
 
 <section class="section" id="projekty">
@@ -14,10 +17,10 @@ import { featuredProjects } from "../../data/projects";
         <span class="eyebrow reveal">Realizacje</span>
         <h2 class="h2 reveal" data-d="1" style="margin-top:18px;">Wybrane projekty</h2>
       </div>
-      <ProjectFilters />
+      <ProjectFilters filters={filters} />
     </div>
 
-    <ProjectGrid projects={featuredProjects} />
+    <ProjectGrid projects={projects} />
 
     <div style="margin-top:48px; display:flex; justify-content:center;" class="reveal">
       <Button href="/projekty" variant="ghost">Wszystkie realizacje</Button>

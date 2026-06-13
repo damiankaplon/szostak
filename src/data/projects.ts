@@ -9,9 +9,15 @@ export type ProjectSize = "wide" | "tall" | "sq" | "half";
 
 export interface Project {
   title: string;
-  category: ProjectCategory;
+  // Slug kategorii używany do filtrowania (data-cat). Na stronie głównej są to
+  // wartości z `ProjectCategory`, a na /projekty slugi wyliczone z danych Strapi.
+  category: string;
   size: ProjectSize;
   image: string;
+  // Slug realizacji — link do strony szczegółów /projekty/[slug].
+  slug: string;
+  // Etykieta wyświetlana na karcie. Gdy pusta, używana jest mapa `categoryLabels`.
+  categoryLabel?: string;
 }
 
 // Etykiety kategorii wyświetlane na kartach.
@@ -23,40 +29,16 @@ export const categoryLabels: Record<ProjectCategory, string> = {
 
 // Przyciski filtra (kolejność ma znaczenie — "all" zawsze pierwszy).
 export interface ProjectFilter {
-  value: "all" | ProjectCategory;
+  value: "all" | string;
   label: string;
 }
 
+// Domyślne filtry — używane, gdy komponent nie dostanie listy wyliczonej ze
+// Strapi. Realizacje pochodzą obecnie z CMS (src/lib/strapi.ts), więc karty
+// portfolio nie są już zaszyte na sztywno w tym pliku.
 export const projectFilters: ProjectFilter[] = [
   { value: "all", label: "Wszystkie" },
   { value: "mieszkalne", label: "Mieszkalne" },
   { value: "publiczne", label: "Publiczne" },
   { value: "turystyka", label: "Turystyczno-rekreacyjne" },
-];
-
-// Wyróżnione realizacje — strona główna (sekcja "Wybrane projekty").
-export const featuredProjects: Project[] = [
-  { title: "Budynek mieszkalny z częścią biurową", category: "mieszkalne", size: "wide", image: "/img/proj-biurowy.webp" },
-  { title: "Modułowy żłobek w drewnie", category: "publiczne", size: "tall", image: "/img/proj-zlobek.jpg" },
-  { title: "Dom na skarpie", category: "mieszkalne", size: "sq", image: "/img/proj-skarpa.webp" },
-  { title: "Nowoczesne domki letniskowe", category: "turystyka", size: "half", image: "/img/proj-domki.webp" },
-  { title: "Hala w konstrukcji stalowej", category: "publiczne", size: "half", image: "/img/proj-hala.webp" },
-  { title: "Tężnia solankowa", category: "turystyka", size: "half", image: "/img/proj-teznia.jpg" },
-  { title: "Dom w układzie dwubryłowym", category: "mieszkalne", size: "half", image: "/img/proj-dwubryl.webp" },
-];
-
-// Pełna lista realizacji — strona /projekty.
-export const allProjects: Project[] = [
-  { title: "Bliźniak — nie taki jak wszystkie", category: "mieszkalne", size: "half", image: "/img/homepage-carousel-1.webp" },
-  { title: "Budynek mieszkalny z częścią biurową", category: "mieszkalne", size: "half", image: "/img/proj-biurowy.webp" },
-  { title: "Dom na skarpie", category: "mieszkalne", size: "tall", image: "/img/card-dom-na-skarpie.webp" },
-  { title: "Dom z ogrodem zimowym", category: "mieszkalne", size: "sq", image: "/img/homepage-carousel-2.webp" },
-  { title: "Nowoczesny dom parterowy", category: "mieszkalne", size: "sq", image: "/img/card-nowoczesny-dom-parterowy.webp" },
-  { title: "Modułowy żłobek w drewnie", category: "publiczne", size: "wide", image: "/img/card-modulowy-zlobek-drewniany.jpg" },
-  { title: "Biura z kontenerów — Lotnisko", category: "publiczne", size: "tall", image: "/img/homepage-carousel-3.webp" },
-  { title: "Hala w konstrukcji stalowej", category: "publiczne", size: "sq", image: "/img/card-hala-magazynowa-w-konstrukcji-stalowej.webp" },
-  { title: "Tężnia solankowa", category: "turystyka", size: "half", image: "/img/card-teznia-solankowa.jpg" },
-  { title: "Nowoczesne domki letniskowe", category: "turystyka", size: "half", image: "/img/card-nowoczesne-domki-letniskowe.webp" },
-  { title: "Turystyczny szereg", category: "turystyka", size: "wide", image: "/img/proj-domki.webp" },
-  { title: "Dom dwubryłowy", category: "mieszkalne", size: "sq", image: "/img/card-dom-w-ukladzie-dwu-brylowym.webp" },
 ];

@@ -7,12 +7,11 @@ import type { Project } from "../../data/projects";
 
 interface Props {
   projects: Project[];
-  href?: string;
 }
 
-const { projects, href } = Astro.props;
+const { projects } = Astro.props;
 ---
 
 <div class="folio__grid reveal" data-d="1">
-  {projects.map((project) => <ProjectCard project={project} href={href} />)}
+  {projects.map((project) => <ProjectCard project={project} />)}
 </div>

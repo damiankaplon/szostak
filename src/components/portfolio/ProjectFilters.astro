@@ -2,12 +2,20 @@
 // Grupa pigułek filtrujących kafelki portfolio po kategorii.
 // Skrypt pokazuje/ukrywa karty .proj na podstawie wybranej kategorii —
 // wyspa zachowania współdzielona przez galerię na stronie głównej i /projekty.
-import { projectFilters } from "../../data/projects";
+import { projectFilters, type ProjectFilter } from "../../data/projects";
+
+interface Props {
+  // Dynamiczny zestaw filtrów (np. wyliczony ze Strapi). Domyślnie statyczna
+  // lista używana w galerii na stronie głównej.
+  filters?: ProjectFilter[];
+}
+
+const { filters = projectFilters } = Astro.props;
 ---
 
 <div class="folio__filters reveal" role="group" aria-label="Filtr kategorii">
   {
-    projectFilters.map((f, i) => (
+    filters.map((f, i) => (
       <button class="chip" data-filter={f.value} aria-pressed={i === 0 ? "true" : "false"}>
         {f.label}
       </button>

@@ -1,0 +1,389 @@
+---
+// Dedykowana strona pojedynczej realizacji.
+// Trasy generowane są podczas budowania z danych Strapi (getStaticPaths),
+// a każda renderuje pełne dane realizacji + galerię zdjęć w pełnej jakości.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Button from "../../components/ui/Button.astro";
+import { getProjectDetails, type ProjectDetail } from "../../lib/strapi";
+
+export async function getStaticPaths() {
+  const details = await getProjectDetails();
+  return details.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+interface Props {
+  project: ProjectDetail;
+}
+
+const { project } = Astro.props;
+
+// Parametry techniczne — pokazujemy tylko te faktycznie wypełnione w CMS.
+const specs = [
+  { label: "Kategoria", value: project.categoryLabel },
+  { label: "Lokalizacja", value: project.location },
+  { label: "Rodzaj", value: project.rodzaj },
+  { label: "Konstrukcja", value: project.konstrukcja },
+  { label: "Parametry", value: project.parametry },
+].filter((s): s is { label: string; value: string } => Boolean(s.value));
+
+// Akapity opisu (puste linie rozdzielają akapity).
+const paragraphs = (project.info ?? "")
+  .split(/\n{2,}|\r\n{2,}/)
+  .map((p) => p.trim())
+  .filter(Boolean);
+
+const metaDescription = (project.info ?? `${project.title} — realizacja biura Szostak Projekt.`)
+  .replace(/\s+/g, " ")
+  .slice(0, 155);
+
+const hasGallery = project.images.length > 1;
+---
+
+<BaseLayout title={`${project.title} — Szostak Projekt`} description={metaDescription}>
+  <section class="section pdetail">
+    <div class="wrap">
+      <div class="crumbs">
+        <a href="/">Start</a><span class="sep">/</span>
+        <a href="/projekty">Projekty</a><span class="sep">/</span>
+        <span>{project.title}</span>
+      </div>
+
+      <header class="pdetail__head reveal">
+        <span class="eyebrow">{project.categoryLabel}</span>
+        <h1 class="h2 pdetail__title">{project.title}</h1>
+        {project.location && <p class="pdetail__loc">{project.location}</p>}
+      </header>
+
+      <!-- Galeria zdjęć realizacji -->
+      <div class="gallery reveal" data-d="1" data-gallery>
+        <div class="gallery__stage" tabindex="0" aria-roledescription="karuzela" aria-label={`Zdjęcia: ${project.title}`}>
+          {
+            project.images.map((img, i) => (
+              <figure class:list={["gallery__slide", { "is-active": i === 0 }]} aria-hidden={i === 0 ? "false" : "true"}>
+                <img
+                  src={img.src}
+                  alt={img.alt || `${project.title} — zdjęcie ${i + 1}`}
+                  width={img.width ?? undefined}
+                  height={img.height ?? undefined}
+                  loading={i === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                />
+              </figure>
+            ))
+          }
+
+          {
+            hasGallery && (
+              <>
+                <button class="gallery__nav gallery__nav--prev" data-prev aria-label="Poprzednie zdjęcie">
+                  ‹
+                </button>
+                <button class="gallery__nav gallery__nav--next" data-next aria-label="Następne zdjęcie">
+                  ›
+                </button>
+                <div class="gallery__counter">
+                  <span data-cur>1</span> / {project.images.length}
+                </div>
+              </>
+            )
+          }
+        </div>
+
+        {
+          hasGallery && (
+            <div class="gallery__thumbs" role="group" aria-label="Miniatury">
+              {project.images.map((img, i) => (
+                <button class:list={["gallery__thumb", { "is-active": i === 0 }]} data-i={i} aria-label={`Pokaż zdjęcie ${i + 1}`}>
+                  <img src={img.src} alt="" loading="lazy" decoding="async" />
+                </button>
+              ))}
+            </div>
+          )
+        }
+      </div>
+
+      <!-- Opis + parametry -->
+      <div class="pdetail__body">
+        <div class="pdetail__info reveal">
+          {
+            paragraphs.length > 0 ? (
+              paragraphs.map((p) => <p>{p}</p>)
+            ) : (
+              <p class="muted">Opis realizacji w przygotowaniu.</p>
+            )
+          }
+          <a href="/projekty" class="pdetail__back">← Wróć do realizacji</a>
+        </div>
+
+        <aside class="pdetail__specs reveal" data-d="1">
+          <dl>
+            {
+              specs.map((s) => (
+                <div class="pdetail__spec">
+                  <dt>{s.label}</dt>
+                  <dd>{s.value}</dd>
+                </div>
+              ))
+            }
+          </dl>
+          <Button href="/kontakt" variant="accent">Zapytaj o podobny projekt</Button>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--ink">
+    <div class="wrap" style="text-align:center;">
+      <h2 class="h2 reveal" style="color:#fff; max-width:18ch; margin-inline:auto;">
+        Twój projekt może być <span class="accent">następny</span>.
+      </h2>
+      <div class="reveal" data-d="1" style="margin-top:30px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+        <Button href="/kontakt" variant="accent">Darmowa wycena</Button>
+        <Button href="/projekty" variant="ghost" arrow={false}>Wszystkie realizacje</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .pdetail__head {
+    margin-top: 22px;
+    margin-bottom: clamp(24px, 3vw, 40px);
+  }
+  .pdetail__title {
+    margin-top: 14px;
+  }
+  .pdetail__loc {
+    margin-top: 12px;
+    font-family: var(--font-display);
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    color: var(--ink-2);
+  }
+  .pdetail__loc::before {
+    content: "◦ ";
+    color: var(--accent);
+  }
+
+  /* ---- Galeria ---- */
+  .gallery {
+    margin-bottom: clamp(36px, 5vw, 64px);
+  }
+  .gallery__stage {
+    position: relative;
+    aspect-ratio: 3 / 2;
+    background: var(--ink);
+    border-radius: var(--radius);
+    overflow: hidden;
+    outline: none;
+  }
+  .gallery__stage:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  .gallery__slide {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    display: grid;
+    place-items: center;
+    opacity: 0;
+    transition: opacity 0.5s var(--ease);
+    pointer-events: none;
+  }
+  .gallery__slide.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .gallery__slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .gallery__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba(8, 8, 10, 0.42);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      background 0.25s var(--ease),
+      transform 0.25s var(--ease);
+  }
+  .gallery__nav:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .gallery__nav--prev {
+    left: clamp(10px, 1.5vw, 20px);
+  }
+  .gallery__nav--next {
+    right: clamp(10px, 1.5vw, 20px);
+  }
+  .gallery__counter {
+    position: absolute;
+    right: clamp(12px, 1.6vw, 20px);
+    bottom: clamp(12px, 1.6vw, 20px);
+    z-index: 2;
+    padding: 6px 12px;
+    border-radius: 100px;
+    background: rgba(8, 8, 10, 0.55);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+  }
+  .gallery__thumbs {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+  }
+  .gallery__thumb {
+    flex: 0 0 auto;
+    width: clamp(78px, 11vw, 118px);
+    aspect-ratio: 3 / 2;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--paper-3);
+    cursor: pointer;
+    opacity: 0.6;
+    transition:
+      opacity 0.25s var(--ease),
+      border-color 0.25s var(--ease);
+  }
+  .gallery__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .gallery__thumb:hover {
+    opacity: 0.9;
+  }
+  .gallery__thumb.is-active {
+    opacity: 1;
+    border-color: var(--accent);
+  }
+
+  /* ---- Opis + parametry ---- */
+  .pdetail__body {
+    display: grid;
+    grid-template-columns: 1.7fr 1fr;
+    gap: clamp(30px, 5vw, 70px);
+    align-items: start;
+  }
+  .pdetail__info p {
+    font-size: clamp(16px, 1.25vw, 19px);
+    line-height: 1.7;
+    color: var(--ink-2);
+    max-width: 62ch;
+    margin-bottom: 1.1em;
+    text-wrap: pretty;
+  }
+  .pdetail__back {
+    display: inline-block;
+    margin-top: 10px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink);
+    border-bottom: 1px solid var(--line-strong);
+    padding-bottom: 2px;
+    transition: color 0.25s var(--ease);
+  }
+  .pdetail__back:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .pdetail__specs {
+    position: sticky;
+    top: 100px;
+    padding: clamp(22px, 2vw, 30px);
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .pdetail__specs dl {
+    margin: 0 0 24px;
+  }
+  .pdetail__spec {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .pdetail__spec:first-child {
+    padding-top: 0;
+  }
+  .pdetail__spec dt {
+    font-family: var(--font-display);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted, var(--ink-2));
+  }
+  .pdetail__spec dd {
+    margin: 6px 0 0;
+    font-size: 17px;
+    color: var(--ink);
+  }
+
+  @media (max-width: 860px) {
+    .pdetail__body {
+      grid-template-columns: 1fr;
+    }
+    .pdetail__specs {
+      position: static;
+    }
+  }
+</style>
+
+<script>
+  // Galeria: krzyżowe przenikanie slajdów, sterowanie strzałkami, miniaturami
+  // i klawiszami ←/→. Bez auto-przewijania — to galeria przeglądana ręcznie.
+  document.querySelectorAll<HTMLElement>("[data-gallery]").forEach((gallery) => {
+    const slides = Array.from(gallery.querySelectorAll<HTMLElement>(".gallery__slide"));
+    const thumbs = Array.from(gallery.querySelectorAll<HTMLElement>(".gallery__thumb"));
+    const counter = gallery.querySelector<HTMLElement>("[data-cur]");
+    const prev = gallery.querySelector<HTMLElement>("[data-prev]");
+    const next = gallery.querySelector<HTMLElement>("[data-next]");
+    if (slides.length < 2) return;
+
+    let cur = 0;
+    function go(n: number) {
+      slides[cur].classList.remove("is-active");
+      thumbs[cur]?.classList.remove("is-active");
+      cur = (n + slides.length) % slides.length;
+      slides[cur].classList.add("is-active");
+      thumbs[cur]?.classList.add("is-active");
+      slides.forEach((s, i) => s.setAttribute("aria-hidden", i === cur ? "false" : "true"));
+      if (counter) counter.textContent = String(cur + 1);
+      thumbs[cur]?.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
+    }
+
+    prev?.addEventListener("click", () => go(cur - 1));
+    next?.addEventListener("click", () => go(cur + 1));
+    thumbs.forEach((t, i) => t.addEventListener("click", () => go(i)));
+
+    const stage = gallery.querySelector<HTMLElement>(".gallery__stage");
+    stage?.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") go(cur - 1);
+      if (e.key === "ArrowRight") go(cur + 1);
+    });
+  });
+</script>
